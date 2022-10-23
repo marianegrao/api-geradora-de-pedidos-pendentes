@@ -1,14 +1,19 @@
 function convertTxtFileInObject(fileInTxt) {
+	const fileInTextFormated = `[${fileInTxt}]`;
 	let validJson = "";
 
-	for (let i = 0; i < fileInTxt.length; i++) {
-		if (fileInTxt[i] === "," && fileInTxt[i + 1] === "]") {
+	for (let i = 0; i < fileInTextFormated.length; i++) {
+		if (fileInTextFormated[i] === "," && fileInTextFormated[i + 1] === "]") {
 			validJson[i] = "";
+		} else if (
+			fileInTextFormated[i] === "}" &&
+			fileInTextFormated[i + 1] !== "]"
+		) {
+			validJson += fileInTextFormated[i] + ",";
 		} else {
-			validJson += fileInTxt[i];
+			validJson += fileInTextFormated[i];
 		}
 	}
-
 	const noteJsonToObject = JSON.parse(validJson);
 	return noteJsonToObject;
 }

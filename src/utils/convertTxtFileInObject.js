@@ -14,8 +14,15 @@ function convertTxtFileInObject(fileInTxt) {
 			validJson += fileInTextFormated[i];
 		}
 	}
-	const noteJsonToObject = JSON.parse(validJson);
-	return noteJsonToObject;
+	const fileJsonToObject = JSON.parse(validJson);
+	for (const value of fileJsonToObject) {
+		if (value.valor_unitário_produto) {
+			value.valor_unitário_produto = Number(
+				value.valor_unitário_produto.replace(",", ".")
+			).toFixed(2);
+		}
+	}
+	return fileJsonToObject;
 }
 
 module.exports = { convertTxtFileInObject };

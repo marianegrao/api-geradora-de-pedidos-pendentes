@@ -23,7 +23,42 @@ async function showPendingRequest() {
 		const listOfRequests = await showAllRequests();
 		const listOfNotes = await showAllNotes();
 
-		console.log(listOfRequests, "-----", listOfNotes);
+		let allItemsInAnRequest = [];
+
+		for (const request of listOfRequests) {
+			console.log(request);
+			for (const requestData of request.data) {
+				let pendingItems = {
+					id_pedido: request.id,
+					número_item: requestData.número_item,
+					quantity: requestData.quantidade_produto,
+				};
+
+				for (const note of listOfNotes) {
+					for (const noteData of note.data) {
+						if (
+							noteData.id_pedido === request.id &&
+							noteData.número_item === requestData.número_item
+						) {
+							const itemFound = allItemsInAnRequest.find((i) => {
+								return (
+									i.número_item === noteData.número_item &&
+									i.id_pedido === request.id
+								);
+							});
+							if (itemFound) {
+								itemFound.quantity -= noteData.quantidade_produto;
+							} else {
+								pendingItems.quantity -= noteData.quantidade_produto;
+								allItemsInAnRequest.push(pendingItems);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		console.log(allItemsInAnRequest);
 	} catch (error) {
 		console.log(error);
 	}

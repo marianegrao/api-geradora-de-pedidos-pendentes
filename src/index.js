@@ -26,13 +26,13 @@ async function showPendingRequest() {
 		let allItemsInAnRequest = [];
 
 		for (const request of listOfRequests) {
-			console.log(request);
 			for (const requestData of request.data) {
 				let pendingItems = {
 					id_pedido: request.id,
 					número_item: requestData.número_item,
 					quantity: requestData.quantidade_produto,
 				};
+				allItemsInAnRequest.push(pendingItems);
 
 				for (const note of listOfNotes) {
 					for (const noteData of note.data) {
@@ -50,7 +50,6 @@ async function showPendingRequest() {
 								itemFound.quantity -= noteData.quantidade_produto;
 							} else {
 								pendingItems.quantity -= noteData.quantidade_produto;
-								allItemsInAnRequest.push(pendingItems);
 							}
 						}
 					}

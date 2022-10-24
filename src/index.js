@@ -1,19 +1,32 @@
-const fs = require("fs/promises");
-const { convertTxtFileInObject } = require("./utils/convertTxtFileInObject");
+const { groupFilesById } = require("./utils/groupFilesById");
 
-async function convertAllNotesInArray() {
-	let allNotes = [];
+async function showAllNotes() {
 	try {
-		const quantityOfNotes = await fs.readdir("./Notas");
-		for (let i = 1; i < quantityOfNotes.length + 1; i++) {
-			const note = await fs.readFile(`./Notas/N${i}.txt`);
-			const noteData = convertTxtFileInObject(note.toString());
-			allNotes.push(noteData);
-		}
-		console.log(allNotes);
+		const listOfNotes = await groupFilesById("./Notas", "N");
+		return listOfNotes;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-convertAllNotesInArray();
+async function showAllRequests() {
+	try {
+		const listOfRequests = await groupFilesById("./Pedidos", "P");
+		return listOfRequests;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function showPendingRequest() {
+	try {
+		const listOfRequests = await showAllRequests();
+		const listOfNotes = await showAllNotes();
+
+		console.log(listOfRequests, "-----", listOfNotes);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+showPendingRequest();

@@ -29,9 +29,15 @@ async function showPendingRequest() {
 			for (const requestData of request.data) {
 				let pendingItems = {
 					id_pedido: request.id,
-					número_item: requestData.número_item,
-					quantity: requestData.quantidade_produto,
+					item: {
+						número_item: requestData.número_item,
+						saldo_quantidade: requestData.quantidade_produto,
+						valor_total_produto:
+							requestData.valor_unitário_produto *
+							requestData.quantidade_produto,
+					},
 				};
+
 				allItemsInAnRequest.push(pendingItems);
 
 				for (const note of listOfNotes) {
@@ -42,14 +48,22 @@ async function showPendingRequest() {
 						) {
 							const itemFound = allItemsInAnRequest.find((i) => {
 								return (
-									i.número_item === noteData.número_item &&
+									i.item.número_item === noteData.número_item &&
 									i.id_pedido === request.id
 								);
 							});
+
 							if (itemFound) {
-								itemFound.quantity -= noteData.quantidade_produto;
+								itemFound.item.saldo_quantidade -= noteData.quantidade_produto;
+								itemFound.item.valor_total_produto =
+									requestData.valor_unitário_produto *
+									itemFound.item.saldo_quantidade;
 							} else {
-								pendingItems.quantity -= noteData.quantidade_produto;
+								pendingItems.item.saldo_quantidade -=
+									noteData.quantidade_produto;
+								pendingItems.item.valor_total_produto =
+									requestData.valor_unitário_produto *
+									pendingItems.item.saldo_quantidade;
 							}
 						}
 					}
@@ -57,7 +71,49 @@ async function showPendingRequest() {
 			}
 		}
 
-		console.log(allItemsInAnRequest);
+		const pendingItems = allItemsInAnRequest.filter((request) => {
+			return request.item.saldo_quantidade !== 0;
+		});
+
+		let listOfPendingItems = [];
+
+		function amoutOfRequistById(id) {
+			let amoutForAIdEspecific = 0;
+			for (const request of listOfRequests) {
+				if (request.id === id) {
+					for (const requestData of request.data) {
+						amoutForAIdEspecific +=
+							requestData.valor_unitário_produto *
+							requestData.quantidade_produto;
+					}
+				}
+			}
+			return amoutForAIdEspecific;
+		}
+
+		for (const item of pendingItems) {
+			let pedido = {
+				valor_total: amoutOfRequistById(item.id_pedido),
+				id_pedido: item.id_pedido,
+				saldo_valor: 0,
+				itens: [],
+			};
+
+			const itemFound = listOfPendingItems.find((i) => {
+				return i.id_pedido === item.id_pedido;
+			});
+
+			if (itemFound) {
+				itemFound.itens.push(item.item);
+				itemFound.saldo_valor += item.item.valor_total_produto;
+			} else {
+				pedido.saldo_valor += item.item.valor_total_produto;
+				pedido.itens.push(item.item);
+				listOfPendingItems.push(pedido);
+			}
+		}
+
+		console.log(listOfPendingItems);
 	} catch (error) {
 		console.log(error);
 	}

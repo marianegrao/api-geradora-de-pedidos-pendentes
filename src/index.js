@@ -1,5 +1,5 @@
 const { groupFilesById } = require("./utils/groupFilesById");
-
+const fs = require("fs/promises");
 async function showAllNotes() {
 	try {
 		const listOfNotes = await groupFilesById("./src/data/Notas", "N");
@@ -113,10 +113,29 @@ async function showPendingRequest() {
 			}
 		}
 
-		console.log(listOfPendingItems);
+		return listOfPendingItems;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-showPendingRequest();
+async function convertObjectInTxtFile() {
+	try {
+		const pendingItems = await showPendingRequest();
+		const txtFile = JSON.stringify(pendingItems);
+		return txtFile;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function createFileTxt() {
+	try {
+		const fileTxt = await convertObjectInTxtFile();
+		await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+createFileTxt();

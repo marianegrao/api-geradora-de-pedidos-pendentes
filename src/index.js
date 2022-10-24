@@ -2,7 +2,7 @@ const { groupFilesById } = require("./utils/groupFilesById");
 
 async function showAllNotes() {
 	try {
-		const listOfNotes = await groupFilesById("./Notas", "N");
+		const listOfNotes = await groupFilesById("./src/data/Notas", "N");
 		return listOfNotes;
 	} catch (error) {
 		console.log(error);
@@ -11,7 +11,7 @@ async function showAllNotes() {
 
 async function showAllRequests() {
 	try {
-		const listOfRequests = await groupFilesById("./Pedidos", "P");
+		const listOfRequests = await groupFilesById("./src/data/Pedidos", "P");
 		return listOfRequests;
 	} catch (error) {
 		console.log(error);

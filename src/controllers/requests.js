@@ -16,11 +16,11 @@ const showPendingRequets = async (req, res) => {
 
 const registerPendingRequests = async (req, res) => {
 	try {
-		const pendingRequets = await createPendingRequestsFile(
-			"./src/data/PedidosPendentes.txt"
-		);
+		await createPendingRequestsFile("./src/data/PedidosPendentes.txt");
 
-		return res.status(200).json(pendingRequets);
+		return res
+			.status(200)
+			.json("Pedidos pendentes foram registrados em arquivo txt");
 	} catch (error) {
 		return res.status(500).json(error.message);
 	}

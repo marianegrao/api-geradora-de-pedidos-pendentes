@@ -12,14 +12,11 @@ async function showAllNotes() {
 async function showAllRequests() {
 	try {
 		const listOfRequests = await groupFilesById("./src/data/Pedidos", "P");
-		//return listOfRequests;
-		console.log(listOfRequests);
+		return listOfRequests;
 	} catch (error) {
 		console.log(error);
 	}
 }
-
-showAllRequests();
 
 async function showPendingRequest() {
 	try {
@@ -29,6 +26,9 @@ async function showPendingRequest() {
 		let allItemsInAnRequest = [];
 
 		for (const request of listOfRequests) {
+			let minItemNumber = 1;
+			let maxItemNumber = request.data.length;
+			let itemNumberAlredyExists = 0;
 			for (const requestData of request.data) {
 				let pendingItems = {
 					id_pedido: request.id,
@@ -40,6 +40,17 @@ async function showPendingRequest() {
 							requestData.quantidade_produto,
 					},
 				};
+				if (requestData.número_item === itemNumberAlredyExists) {
+					return console.log("Numero de item repetido");
+				}
+				itemNumberAlredyExists = requestData.número_item;
+
+				if (
+					requestData.número_item < minItemNumber ||
+					requestData.número_item > maxItemNumber
+				) {
+					return console.log("Numero de item inválido");
+				}
 
 				allItemsInAnRequest.push(pendingItems);
 
@@ -116,11 +127,14 @@ async function showPendingRequest() {
 			}
 		}
 
-		return listOfPendingItems;
+		// return listOfPendingItems;
+		console.log(listOfPendingItems);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+showPendingRequest();
 
 async function convertObjectInTxtFile() {
 	try {

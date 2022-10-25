@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const calculateAmountOfRequestById = require("./utils/calculateAmountOfRequestById");
 const showAllNotes = require("./utils/showAllNotes");
 const showAllRequests = require("./utils/showAllRequests");
+const convertObjectInTxtFile = require("./utils/convertObjectInTxtFile");
 
 async function showPendingRequest() {
 	try {
@@ -128,20 +129,12 @@ async function showPendingRequest() {
 	}
 }
 
-async function convertObjectInTxtFile() {
-	try {
-		const pendingItems = await showPendingRequest();
-		const itemsInString = JSON.stringify(pendingItems);
-		return itemsInString;
-	} catch (error) {
-		console.log(error);
-	}
-}
-
 async function createFileTxt() {
 	try {
-		const fileTxt = await convertObjectInTxtFile();
+		const objectOfPendingItems = await showPendingRequest();
+		const fileTxt = await convertObjectInTxtFile(objectOfPendingItems);
 		await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
+		console.log(objectOfPendingItems);
 	} catch (error) {
 		console.log(error);
 	}

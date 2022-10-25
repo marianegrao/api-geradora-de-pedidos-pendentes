@@ -93,8 +93,8 @@ async function showPendingRequest() {
 
 		for (const item of pendingItems) {
 			let pedido = {
-				valor_total: amoutOfRequistById(item.id_pedido),
 				id_pedido: item.id_pedido,
+				valor_total: amoutOfRequistById(item.id_pedido),
 				saldo_valor: 0,
 				itens: [],
 			};
@@ -122,8 +122,9 @@ async function showPendingRequest() {
 async function convertObjectInTxtFile() {
 	try {
 		const pendingItems = await showPendingRequest();
-		const txtFile = JSON.stringify(pendingItems);
-		return txtFile;
+		const itemsInString = JSON.stringify(pendingItems);
+
+		return itemsInString;
 	} catch (error) {
 		console.log(error);
 	}

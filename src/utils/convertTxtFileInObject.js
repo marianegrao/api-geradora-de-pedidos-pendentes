@@ -1,5 +1,6 @@
 function convertTxtFileInObject(fileInTxt) {
-	const fileInTextFormated = `[${fileInTxt}]`;
+	const fileInTextFormated =
+		fileInTxt[0] === "[" ? fileInTxt : `[${fileInTxt}]`;
 	let validJson = "";
 
 	for (let i = 0; i < fileInTextFormated.length; i++) {
@@ -7,7 +8,8 @@ function convertTxtFileInObject(fileInTxt) {
 			validJson[i] = "";
 		} else if (
 			fileInTextFormated[i] === "}" &&
-			fileInTextFormated[i + 1] !== "]"
+			fileInTextFormated[i + 1] !== "]" &&
+			fileInTextFormated[i + 1] !== ","
 		) {
 			validJson += fileInTextFormated[i] + ",";
 		} else {

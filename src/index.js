@@ -12,11 +12,14 @@ async function showAllNotes() {
 async function showAllRequests() {
 	try {
 		const listOfRequests = await groupFilesById("./src/data/Pedidos", "P");
-		return listOfRequests;
+		//return listOfRequests;
+		console.log(listOfRequests);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+showAllRequests();
 
 async function showPendingRequest() {
 	try {
@@ -133,10 +136,11 @@ async function convertObjectInTxtFile() {
 async function createFileTxt() {
 	try {
 		const fileTxt = await convertObjectInTxtFile();
-		await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
+		// await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
+		//console.log(fileTxt);
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-createFileTxt();
+//createFileTxt();

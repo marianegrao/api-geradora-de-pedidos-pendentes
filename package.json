@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/marianegrao/gerador-de-pedidos-pendentes#readme",
   "dependencies": {
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "yup-locales": "^1.2.10"
   }
 }

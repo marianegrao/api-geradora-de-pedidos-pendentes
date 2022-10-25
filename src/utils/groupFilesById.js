@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const { schemaNote } = require("../validations/schemaNotes");
+const { schemaRequest } = require("../validations/schemaRequest");
 const { convertTxtFileInObject } = require("./convertTxtFileInObject");
 
 async function groupFilesById(directory, fileId) {
@@ -11,10 +12,15 @@ async function groupFilesById(directory, fileId) {
 			const file = await fs.readFile(`${directory}/${fileId}${i}.txt`);
 
 			const fileObject = convertTxtFileInObject(file.toString());
-			if (fileId === "N") {
-				await schemaNote(fileObject);
-			} else {
-			}
+
+			fileObject.forEach(async (file) => {
+				if (directory.toLowerCase().includes("notas")) {
+					await schemaNote.validate(file);
+				} else {
+					await schemaRequest.validate(file);
+				}
+			});
+
 			allFiles.push({ id: i, data: fileObject });
 		}
 

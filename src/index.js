@@ -89,6 +89,27 @@ async function showPendingRequest() {
 			return request.item.saldo_quantidade !== 0;
 		});
 
+		const isQuantityOfProductExceeded = [];
+		pendingItems.forEach((request) => {
+			if (request.item.saldo_quantidade < 0) {
+				isQuantityOfProductExceeded.push({
+					...request,
+					item: {
+						número_item: request.item.número_item,
+						saldo_quantidade: -1 * request.item.saldo_quantidade,
+						valor_total_execedido: -1 * request.item.valor_total_produto,
+					},
+				});
+			}
+		});
+
+		if (isQuantityOfProductExceeded.length > 0) {
+			console.log(
+				"Esse(s) item(ns) execederam a quantidade: ",
+				isQuantityOfProductExceeded
+			);
+		}
+
 		let listOfPendingItems = [];
 
 		function amoutOfRequistById(id) {
@@ -127,14 +148,11 @@ async function showPendingRequest() {
 			}
 		}
 
-		// return listOfPendingItems;
-		console.log(listOfPendingItems);
+		return listOfPendingItems;
 	} catch (error) {
 		console.log(error);
 	}
 }
-
-showPendingRequest();
 
 async function convertObjectInTxtFile() {
 	try {
@@ -150,11 +168,10 @@ async function convertObjectInTxtFile() {
 async function createFileTxt() {
 	try {
 		const fileTxt = await convertObjectInTxtFile();
-		// await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
-		//console.log(fileTxt);
+		await fs.appendFile("./src/data/PedidosPendentes.txt", fileTxt);
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-//createFileTxt();
+createFileTxt();

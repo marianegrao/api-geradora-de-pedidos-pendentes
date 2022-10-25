@@ -1,22 +1,7 @@
-const { groupFilesById } = require("./utils/groupFilesById");
 const fs = require("fs/promises");
-async function showAllNotes() {
-	try {
-		const listOfNotes = await groupFilesById("./src/data/Notas", "N");
-		return listOfNotes;
-	} catch (error) {
-		console.log(error);
-	}
-}
-
-async function showAllRequests() {
-	try {
-		const listOfRequests = await groupFilesById("./src/data/Pedidos", "P");
-		return listOfRequests;
-	} catch (error) {
-		console.log(error);
-	}
-}
+const calculateAmountOfRequestById = require("./utils/calculateAmountOfRequestById");
+const showAllNotes = require("./utils/showAllNotes");
+const showAllRequests = require("./utils/showAllRequests");
 
 async function showPendingRequest() {
 	try {
@@ -112,24 +97,13 @@ async function showPendingRequest() {
 
 		let listOfPendingItems = [];
 
-		function amoutOfRequistById(id) {
-			let amoutForAIdEspecific = 0;
-			for (const request of listOfRequests) {
-				if (request.id === id) {
-					for (const requestData of request.data) {
-						amoutForAIdEspecific +=
-							requestData.valor_unitário_produto *
-							requestData.quantidade_produto;
-					}
-				}
-			}
-			return amoutForAIdEspecific;
-		}
-
 		for (const item of pendingItems) {
 			let pedido = {
 				id_pedido: item.id_pedido,
-				valor_total: amoutOfRequistById(item.id_pedido),
+				valor_total: calculateAmountOfRequestById(
+					listOfRequests,
+					item.id_pedido
+				),
 				saldo_valor: 0,
 				itens: [],
 			};
@@ -158,7 +132,6 @@ async function convertObjectInTxtFile() {
 	try {
 		const pendingItems = await showPendingRequest();
 		const itemsInString = JSON.stringify(pendingItems);
-
 		return itemsInString;
 	} catch (error) {
 		console.log(error);

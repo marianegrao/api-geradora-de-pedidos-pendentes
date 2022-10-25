@@ -3,7 +3,7 @@ const { schemaNote } = require("../validations/schemaNotes");
 const { schemaRequest } = require("../validations/schemaRequest");
 const { convertTxtFileInObject } = require("./convertTxtFileInObject");
 
-async function groupFilesById(directory, fileId) {
+async function groupFilesByIdInArray(directory, fileId) {
 	let allFiles = [];
 	try {
 		const listOfFilesInADirectory = await fs.readdir(directory);
@@ -30,4 +30,4 @@ async function groupFilesById(directory, fileId) {
 	}
 }
 
-module.exports = { groupFilesById };
+module.exports = groupFilesByIdInArray;

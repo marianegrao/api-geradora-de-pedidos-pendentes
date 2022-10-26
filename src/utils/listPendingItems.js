@@ -16,11 +16,13 @@ function listPendingItems(pendingItems, listOfRequests) {
 		});
 
 		if (itemFound) {
-			itemFound.itens.push(item.item);
+			const { valor_unitário_produto, ...itemData } = item.item;
+			itemFound.itens.push(itemData);
 			itemFound.saldo_valor += item.item.valor_total_produto;
 		} else {
 			pedido.saldo_valor += item.item.valor_total_produto;
-			pedido.itens.push(item.item);
+			const { valor_unitário_produto, ...itemData } = item.item;
+			pedido.itens.push(itemData);
 			listOfPendingItems.push(pedido);
 		}
 	}

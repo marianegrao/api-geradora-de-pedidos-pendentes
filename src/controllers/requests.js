@@ -27,7 +27,7 @@ const registerPendingRequests = async (req, res) => {
 		}
 
 		return res
-			.status(200)
+			.status(201)
 			.json("Arquivo txt contendo os pedidos pedentes foi criado com sucesso");
 	} catch (error) {
 		return res.status(500).json(error.message);

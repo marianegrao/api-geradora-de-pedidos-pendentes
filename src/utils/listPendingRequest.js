@@ -4,6 +4,7 @@ const listPendingItems = require("./listPendingItems");
 const checkExcessProducts = require("./checkExcessProducts");
 async function listPendingRequest() {
 	let response = {};
+
 	try {
 		const listOfRequests = await groupFilesByIdInArray(
 			"./src/data/Pedidos",
@@ -28,10 +29,21 @@ async function listPendingRequest() {
 			listOfNotes.allFiles
 		);
 
-		checkExcessProducts(pendingItems);
+		if (pendingItems.error) {
+			response.error = true;
+			response.message = pendingItems.message;
+			return response;
+		}
+
+		const isProductInExecess = checkExcessProducts(pendingItems.allItems);
+
+		if (isProductInExecess.error) {
+			response = isProductInExecess;
+			return response;
+		}
 
 		const listOfPendingItems = listPendingItems(
-			pendingItems,
+			pendingItems.allItems,
 			listOfRequests.allFiles
 		);
 

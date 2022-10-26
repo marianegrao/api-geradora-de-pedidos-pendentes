@@ -6,7 +6,8 @@ const showPendingRequets = async (req, res) => {
 		const response = await listPendingRequest();
 
 		if (response.error) {
-			return res.status(400).json(response.message);
+			const { error, ...data } = response;
+			return res.status(400).json(data);
 		}
 
 		return res.status(200).json(response.listOfPendingItems);
@@ -17,11 +18,17 @@ const showPendingRequets = async (req, res) => {
 
 const registerPendingRequests = async (req, res) => {
 	try {
-		await createPendingRequestsFile("./src/data/PedidosPendentes.txt");
+		const response = await createPendingRequestsFile(
+			"./src/data/PedidosPendentes.txt"
+		);
+
+		if (response.error) {
+			return res.status(400).json(response.message);
+		}
 
 		return res
 			.status(200)
-			.json("Pedidos pendentes foram registrados em arquivo txt");
+			.json("Arquivo txt contendo os pedidos pedentes foi criado com sucesso");
 	} catch (error) {
 		return res.status(500).json(error.message);
 	}

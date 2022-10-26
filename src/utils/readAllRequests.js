@@ -1,5 +1,7 @@
 function readAllRequest(listOfRequests) {
 	let allItems = [];
+	const response = {};
+	let isAnyError = false;
 
 	for (const request of listOfRequests) {
 		let minItemNumber = 1;
@@ -17,7 +19,9 @@ function readAllRequest(listOfRequests) {
 				},
 			};
 			if (requestData.número_item === itemNumberAlredyExists) {
-				return console.log("Número de item repetido");
+				response.error = true;
+				response.message = "Número de item repetido";
+				isAnyError = true;
 			}
 			itemNumberAlredyExists = requestData.número_item;
 
@@ -25,13 +29,22 @@ function readAllRequest(listOfRequests) {
 				requestData.número_item < minItemNumber ||
 				requestData.número_item > maxItemNumber
 			) {
-				return console.log("Número de item inválido");
+				response.error = true;
+				response.message = "Número de item inválido";
+				isAnyError = true;
 			}
 
 			allItems.push(pendingItems);
 		}
 	}
-	return allItems;
+
+	if (isAnyError) {
+		return response;
+	} else {
+		response.error = false;
+		response.allItems = allItems;
+		return response;
+	}
 }
 
 module.exports = readAllRequest;

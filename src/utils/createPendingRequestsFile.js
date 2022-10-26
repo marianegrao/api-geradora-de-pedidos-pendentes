@@ -5,8 +5,8 @@ const convertObjectInTxtFile = require("./convertObjectInTxtFile");
 async function createPendingRequestsFile(directory) {
 	try {
 		const objectOfPendingItems = await showPendingRequest();
-		const fileTxt = await convertObjectInTxtFile(objectOfPendingItems);
-		await fs.appendFile(directory, fileTxt);
+		const validJson = await convertObjectInTxtFile(objectOfPendingItems);
+		await fs.appendFile(directory, validJson);
 	} catch (error) {
 		console.log(error);
 	}

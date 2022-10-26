@@ -3,7 +3,7 @@ async function convertObjectInTxtFile(object) {
 		const itemsInString = JSON.stringify(object);
 		return itemsInString;
 	} catch (error) {
-		console.log(error);
+		return error;
 	}
 }
 module.exports = convertObjectInTxtFile;

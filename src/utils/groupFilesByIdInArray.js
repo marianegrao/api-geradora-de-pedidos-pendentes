@@ -1,10 +1,11 @@
 const fs = require("fs/promises");
-const { schemaNote } = require("../validations/schemaNotes");
-const { schemaRequest } = require("../validations/schemaRequest");
 const { convertTxtFileInObject } = require("./convertTxtFileInObject");
+const validateKeysOfObjects = require("./validateKeysOfObjects");
 
 async function groupFilesByIdInArray(directory, fileId) {
 	let allFiles = [];
+	let response = {};
+	let isAnyError = 0;
 	try {
 		const listOfFilesInADirectory = await fs.readdir(directory);
 
@@ -13,20 +14,30 @@ async function groupFilesByIdInArray(directory, fileId) {
 
 			const fileObject = convertTxtFileInObject(file.toString());
 
-			fileObject.forEach(async (file) => {
-				if (directory.toLowerCase().includes("notas")) {
-					await schemaNote.validate(file);
-				} else {
-					await schemaRequest.validate(file);
+			fileObject.forEach(async (obj) => {
+				const data = await validateKeysOfObjects(directory, obj);
+
+				if (data.error) {
+					response = data;
+					isAnyError = true;
 				}
 			});
 
 			allFiles.push({ id: i, data: fileObject });
 		}
 
-		return allFiles;
+		if (isAnyError) {
+			return response;
+		} else {
+			response.allFiles = allFiles;
+			response.error = false;
+
+			return response;
+		}
 	} catch (error) {
-		console.log(error);
+		response.error = true;
+		response.message = error.message;
+		return response;
 	}
 }
 

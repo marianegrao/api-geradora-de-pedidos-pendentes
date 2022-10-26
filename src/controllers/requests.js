@@ -3,14 +3,15 @@ const listPendingRequest = require("../utils/listPendingRequest");
 
 const showPendingRequets = async (req, res) => {
 	try {
-		const pendingRequets = await listPendingRequest();
-		if (!pendingRequets) {
-			return res.status(400).json("Não foi possível listar pedidos pendentes.");
+		const response = await listPendingRequest();
+
+		if (response.error) {
+			return res.status(400).json(response.message);
 		}
 
-		return res.status(200).json(pendingRequets);
+		return res.status(200).json(response.listOfPendingItems);
 	} catch (error) {
-		return res.status(500).json(error.message);
+		return res.status(500).json(error);
 	}
 };
 
